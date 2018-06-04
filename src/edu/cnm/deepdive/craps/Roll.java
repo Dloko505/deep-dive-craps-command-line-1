@@ -32,21 +32,7 @@ public class Roll {
 
   @Override
   public String toString() {
-    return String.format("%d %d", dice[0], dice[1]);
+    return String.format("[%d-%d]", dice[0], dice[1]);
   }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

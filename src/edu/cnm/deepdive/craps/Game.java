@@ -6,44 +6,41 @@ import java.util.Random;
 
 public class Game {
 
-  private State currentState = State.INITIAL;
-  private List<Roll> rolls = new LinkedList<>();
+  private State state;
+  private List<Roll> rolls;
 
-  public State play(Random rng) {
-    if (currentState == State.INITIAL) {
-      Roll roll = new Roll(rng);
-      currentState = currentState.next(roll);
-      rolls.add(roll);
-      while (currentState == State.POINT) {
-        roll = new Roll(rng);
-        rolls.add(roll);
-        currentState = currentState.next(roll);
-      }
-    }
-    return currentState;
+  public Game() {
+    rolls = new LinkedList<>();
+    reset();
   }
 
-  public State getCurrentState() {
-    return currentState;
+  public State play(Random rng) {
+    if (state != State.INITIAL) {
+      throw new IllegalStateException("Game.play() may only be invoked in State.INITIAL.");
+    }
+    Roll roll = new Roll(rng);
+    int point = roll.getSum();
+    rolls.add(roll);
+    state = state.next(roll.getSum(), point);
+    while (state == State.POINT) {
+      roll = new Roll(rng);
+      rolls.add(roll);
+      state = state.next(roll.getSum(), point);
+    }
+    return state;
+  }
+
+  public State getState() {
+    return state;
   }
 
   public Roll[] getRolls() {
     return rolls.toArray(new Roll[rolls.size()]);
   }
 
+  public void reset() {
+    state = State.INITIAL;
+    rolls.clear();
+  }
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
